@@ -1,12 +1,9 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: alan
- */
-
-/**
  * @file
  * Contains the simple timeline row plugin.
+ * Created by JetBrains PhpStorm.
+ * User: alan
  */
 
 /**
@@ -14,10 +11,15 @@
  *
  * @ingroup views_row_plugins
  */
-class simple_timeline_row_plugin extends views_plugin_row
-{
+class simple_timeline_row_plugin extends views_plugin_row {
 
-  function option_definition() {
+  /**
+   * Extends the default options inherited by this plugin.
+   *
+   * @return array
+   *   The list of options provided by this plugin.
+   */
+  public function option_definition() {
     $options = parent::option_definition();
     $options['simple_timeline_date'] = array('default' => array());
     $options['simple_timeline_date_separator'] = array('default' => array());
@@ -27,7 +29,13 @@ class simple_timeline_row_plugin extends views_plugin_row
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  /**
+   * Extends the options form inherited by this plugin.
+   *
+   * @param $form
+   * @param $form_state
+   */
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['simple_timeline_date'] = array(

@@ -17,6 +17,7 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
    * Modifies the default options inherited by this plugin.
    *
    * @return array
+   *   The list of options provided by this plugin.
    */
   public function option_definition() {
     $options = parent::option_definition();
@@ -40,6 +41,7 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
    * Renders the data provided to this plugin.
    *
    * @return string
+   *   The rendered html.
    */
   public function render() {
     drupal_add_css(drupal_get_path('module', 'simple_timeline') . '/simple_timeline.css', 'file');
@@ -50,6 +52,7 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
    * Validate whether this plugin is configured correctly.
    *
    * @return array
+   *   The list of errors to be displayed.
    */
   public function validate() {
     $errors = array();

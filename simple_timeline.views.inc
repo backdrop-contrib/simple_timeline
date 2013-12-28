@@ -1,5 +1,7 @@
 <?php
 /**
+ * @file
+ * simple_timeline.views.inc
  * Created by JetBrains PhpStorm.
  * User: alan
  */
