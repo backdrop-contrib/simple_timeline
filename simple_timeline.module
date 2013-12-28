@@ -19,16 +19,18 @@ function simple_timeline_views_api() {
 function simple_timeline_theme() {
   return array(
     'simple_timeline_fields' => array(
-        'arguments' => array('plugin' => NULL, 'input' => NULL),
-        'path' => drupal_get_path('module', 'simple_timeline'),
-        'template' => 'simple-timeline-fields',
+      'arguments' => array('plugin' => NULL, 'input' => NULL),
+      'path' => drupal_get_path('module', 'simple_timeline'),
+      'template' => 'simple-timeline-fields',
     ),
   );
 }
 
 /**
  * Implements template_preprocess_hook().
- * @param $vars
+ *
+ * @param array $vars
+ *   The variables that will be passed to the template.
  */
 function template_preprocess_simple_timeline_fields(&$vars) {
   $view = & $vars['view'];

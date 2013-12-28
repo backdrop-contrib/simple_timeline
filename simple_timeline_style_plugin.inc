@@ -1,12 +1,9 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: alan
- */
-
-/**
  * @file
  * Contains the simple timeline style plugin.
+ * Created by JetBrains PhpStorm.
+ * User: alan
  */
 
 /**
@@ -14,25 +11,46 @@
  *
  * @ingroup views_style_plugins
  */
-class simple_timeline_style_plugin extends views_plugin_style_list
-{
-  function option_definition() {
+class simple_timeline_style_plugin extends views_plugin_style_list {
+
+  /**
+   * Modifies the default options inherited by this plugin.
+   *
+   * @return array
+   */
+  public function option_definition() {
     $options = parent::option_definition();
     $options['wrapper_class'] = array('default' => 'item-list simple_timeline');
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  /**
+   * Modifies the options form inherited by this plugin.
+   *
+   * @param $form
+   * @param $form_state
+   */
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['type']['#type'] = 'hidden';
     $form['wrapper_class']['#type'] = 'hidden';
   }
 
+  /**
+   * Renders the data provided to this plugin.
+   *
+   * @return string
+   */
   public function render() {
     drupal_add_css(drupal_get_path('module', 'simple_timeline') . '/simple_timeline.css', 'file');
     return parent::render();
   }
 
+  /**
+   * Validate whether this plugin is configured correctly.
+   *
+   * @return array
+   */
   public function validate() {
     $errors = array();
 
