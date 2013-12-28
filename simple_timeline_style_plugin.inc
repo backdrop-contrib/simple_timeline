@@ -28,8 +28,10 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
   /**
    * Modifies the options form inherited by this plugin.
    *
-   * @param $form
-   * @param $form_state
+   * @param array $form
+   *   The form being generated.
+   * @param array $form_state
+   *   The state that the form has been posted in.
    */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
