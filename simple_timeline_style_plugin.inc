@@ -14,18 +14,6 @@
 class simple_timeline_style_plugin extends views_plugin_style_list {
 
   /**
-   * Modifies the default options inherited by this plugin.
-   *
-   * @return array
-   *   The list of options provided by this plugin.
-   */
-  public function option_definition() {
-    $options = parent::option_definition();
-    $options['wrapper_class'] = array('default' => 'item-list simple_timeline');
-    return $options;
-  }
-
-  /**
    * Modifies the options form inherited by this plugin.
    *
    * @param array $form
@@ -36,7 +24,9 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['type']['#type'] = 'hidden';
-    $form['wrapper_class']['#type'] = 'hidden';
+
+    $form['row_class_special']['#title'] .= t(' (required on timelines)');
+    $form['row_class_special']['#disabled'] = TRUE;
   }
 
   /**
@@ -47,6 +37,10 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
    */
   public function render() {
     drupal_add_css(drupal_get_path('module', 'simple_timeline') . '/simple_timeline.css', 'file');
+
+    // Set needed values for basic timeline proper functioning.
+    $this->options['wrapper_class'] .= ' simple-timeline';
+
     return parent::render();
   }
 

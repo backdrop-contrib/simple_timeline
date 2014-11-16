@@ -19,6 +19,7 @@ function simple_timeline_views_plugins() {
         'help' => t('Display the selected items on a timeline.'),
         'theme' => 'views_view_list',
         'uses row plugin' => TRUE,
+        'uses row class' => TRUE,
         'uses fields' => TRUE,
         'uses grouping' => FALSE,
         'type' => 'normal',
