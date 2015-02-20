@@ -36,7 +36,15 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
    *   The rendered html.
    */
   public function render() {
-    drupal_add_css(drupal_get_path('module', 'simple_timeline') . '/simple_timeline.css', 'file');
+    // @FIXME
+// CSS, JavaScript, and libraries are now attached directly to render arrays
+// using the #attached property. drupal_add_css() is internal and should never be
+// called directly.
+// 
+// 
+// @see https://www.drupal.org/node/2169605
+// drupal_add_css(drupal_get_path('module', 'simple_timeline') . '/simple_timeline.css', 'file');
+
 
     // Set needed values for basic timeline proper functioning.
     $this->options['wrapper_class'] .= ' simple-timeline';

@@ -6,6 +6,13 @@
  * User: alan
  */
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+
 /**
  * Implements hook_views_api().
  */
@@ -14,46 +21,87 @@ function simple_timeline_views_api() {
 }
 
 /**
- * Implements hook_theme().
- */
-function simple_timeline_theme() {
-  return array(
-    'simple_timeline_fields' => array(
-      'arguments' => array('plugin' => NULL, 'input' => NULL),
-      'path' => drupal_get_path('module', 'simple_timeline'),
-      'template' => 'simple-timeline-fields',
-    ),
-  );
-}
-
-/**
  * Implements template_preprocess_hook().
  *
  * @param array $vars
  *   The variables that will be passed to the template.
  */
-function template_preprocess_simple_timeline_fields(&$vars) {
-  $view = & $vars['view'];
-  $options = $vars['options'];
-
-  $vars['simple_timeline_date'] = $vars['simple_timeline_text'] = array();
-  $vars['simple_timeline_image'] = NULL;
-
+function template_preprocess_simple_timeline_fields(&$variables) {
+  $view = $variables['view'];
+  // Loop through the fields for this view.
+  $previous_inline = FALSE;
+  $variables['fields'] = array(); // ensure it's at least an empty array.
+  /** @var \Drupal\views\ResultRow $row */
+  $row = $variables['row'];
+  $options = $variables['options'];
   foreach ($view->field as $id => $field) {
-    $field_output = $view->field[$id]->theme($vars['row']);
-
-    if (in_array($id, array_filter($options['simple_timeline_date']))) {
-      $vars['simple_timeline_date'][] = $field_output;
+    // render this even if set to exclude so it can be used elsewhere.
+    $field_output = '';
+    $field_output = $view->style_plugin->getField($row->index, $id);
+    if (!empty($field_output)) {
+      $object = new stdClass();
+    $object->handler = $view->field[$id];
+    $attributes = array();
+    if (isset($options['simple_timeline_date'][$id]) && $options['simple_timeline_date'][$id] !== 0) {
+      $attributes['class'] = 'timeline-date';
+      $opening_tag = '<h3';
+      $closing_tag = '</h3>';
+    }
+    if (isset($options['simple_timeline_text'][$id]) && $options['simple_timeline_text'][$id] !== 0) {
+      $attributes['class'] = 'timeline-text';
+      $opening_tag = '<span';
+      $closing_tag = '</span>';
+    }
+    if (isset($options['simple_timeline_image'][$id]) && $options['simple_timeline_image'][$id] !== 0) {
+      $attributes['class'] = 'timeline-image';
+      $opening_tag = '<span';
+      $closing_tag = '</span>';
     }
 
-    if (in_array($id, array_filter($options['simple_timeline_text']))) {
-      $vars['simple_timeline_text'][] = $field_output;
+    $attributes = new Attribute($attributes);
+
+    $opening_tag .= $attributes;
+    $field_output = $opening_tag . '>' . $field_output . $closing_tag;
+    dpm($field_output);
+    $object->content = $field_output;
+
+    if (!empty($variables['options']['separator']) && $previous_inline && $object->inline && $object->content) {
+      $object->separator = Xss::filterAdmin($variables['options']['separator']);
     }
 
-    if ($id == $options['simple_timeline_image']) {
-      $vars['simple_timeline_image'] = $field_output;
+    $variables['fields'][$id] = $object;
     }
+
   }
-  $vars['simple_timeline_date'] = implode($options['simple_timeline_date_separator'], $vars['simple_timeline_date']);
-  $vars['simple_timeline_text'] = implode($options['simple_timeline_text_separator'], $vars['simple_timeline_text']);
+
 }
+
+/**
+ * Returns HTML for multiple views fields.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - fields: An array of field objects. Each field object contains:
+ *     - separator: A string that separates the fields.
+ *     - wrapper_suffix: A string added to the beginning of the fields.
+ *     - label_html: An HTML string that labels the fields.
+ *     - content: The fields.
+ *     - wrapper_suffix: A string added to the end of the fields.
+ *
+ * @see template_preprocess_views_view_fields()
+ */
+function theme_simple_timeline_fields($variables) {
+  $fields = $variables['fields'];
+  $output = '';
+
+  foreach ($fields as $field) {
+    if (!empty($field->separator)) {
+      $output .= $field->separator;
+    }
+
+    $output .= $field->content;
+  }
+
+  return $output;
+}
+

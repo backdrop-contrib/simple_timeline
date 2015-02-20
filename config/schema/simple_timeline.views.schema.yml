@@ -1,0 +1,32 @@
+# Schema for the simple_timeline plugins.
+
+views.style.simple_timeline_style:
+  type: views_style
+  label: 'Simple Timeline Style'
+  mapping:
+    wrapper_class:
+      type: string
+      label: 'Wrapper class'
+    class:
+      type: string
+      label: 'List class'
+
+views.row.simple_timeline_row:
+  type: views_row
+  label: 'Simple Timeline Item'
+  mapping:
+    simple_timeline_date:
+      type: sequence
+      label: 'Timeline Date fields'
+    simple_timeline_date_separator:
+      type: string
+      label: 'Date Separator'
+    simple_timeline_text:
+      type: sequence
+      label: 'Timeline Text fields'
+    simple_timeline_text_separator:
+      type: string
+      label: 'Text Separator'
+    simple_timeline_image:
+      type: sequence
+      label: 'Timeline Image field'

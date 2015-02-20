@@ -1,7 +1,0 @@
-name = Simple Timeline
-description = Creates a simple time-line out of posts selected in a view.
-package = Views
-core = 7.x
-dependencies[] = views
-files[] = simple_timeline_style_plugin.inc
-files[] = simple_timeline_row_plugin.inc
