@@ -1,107 +1,95 @@
 <?php
+
 /**
  * @file
- * simple_timeline.module
- * Created by JetBrains PhpStorm.
- * User: alan
+ * Contains simple_timeline.module.
  */
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\Xss;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Url;
 
 /**
- * Implements hook_views_api().
+ * Implements hook_help().
  */
-function simple_timeline_views_api() {
-  return array('api' => '3.0');
+function simple_timeline_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the simple_timeline module.
+    case 'help.page.simple_timeline':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provide a views style for displaying content in a vertical timeline') . '</p>';
+      return $output;
+
+    default:
+  }
 }
 
 /**
- * Implements template_preprocess_hook().
- *
- * @param array $vars
- *   The variables that will be passed to the template.
+ * Implements hook_theme_suggestions_HOOK_alter().
  */
-function template_preprocess_simple_timeline_fields(&$variables) {
+function simple_timeline_theme_suggestions_views_view_simple_timeline_alter(array &$suggestions, array $variables) {
   $view = $variables['view'];
-  // Loop through the fields for this view.
-  $previous_inline = FALSE;
-  $variables['fields'] = array(); // ensure it's at least an empty array.
-  /** @var \Drupal\views\ResultRow $row */
-  $row = $variables['row'];
-  $options = $variables['options'];
-  foreach ($view->field as $id => $field) {
-    // render this even if set to exclude so it can be used elsewhere.
-    $field_output = '';
-    $field_output = $view->style_plugin->getField($row->index, $id);
-    if (!empty($field_output)) {
-      $object = new stdClass();
-    $object->handler = $view->field[$id];
-    $attributes = array();
-    if (isset($options['simple_timeline_date'][$id]) && $options['simple_timeline_date'][$id] !== 0) {
-      $attributes['class'] = 'timeline-date';
-      $opening_tag = '<h3';
-      $closing_tag = '</h3>';
-    }
-    if (isset($options['simple_timeline_text'][$id]) && $options['simple_timeline_text'][$id] !== 0) {
-      $attributes['class'] = 'timeline-text';
-      $opening_tag = '<span';
-      $closing_tag = '</span>';
-    }
-    if (isset($options['simple_timeline_image'][$id]) && $options['simple_timeline_image'][$id] !== 0) {
-      $attributes['class'] = 'timeline-image';
-      $opening_tag = '<span';
-      $closing_tag = '</span>';
-    }
+  $id = $view->storage->id();
+  $display = $view->current_display;
 
-    $attributes = new Attribute($attributes);
-
-    $opening_tag .= $attributes;
-    $field_output = $opening_tag . '>' . $field_output . $closing_tag;
-    dpm($field_output);
-    $object->content = $field_output;
-
-    if (!empty($variables['options']['separator']) && $previous_inline && $object->inline && $object->content) {
-      $object->separator = Xss::filterAdmin($variables['options']['separator']);
-    }
-
-    $variables['fields'][$id] = $object;
-    }
-
-  }
-
+  $suggestions[] = 'views_view_simple_timeline__' . $id;
+  $suggestions[] = 'views_view_simple_timeline__' . $display;
+  $suggestions[] = 'views_view_simple_timeline__' . $id . '__' . $display;
 }
 
 /**
- * Returns HTML for multiple views fields.
+ * Prepares variables for Simple Timeline template.
  *
- * @param $variables
+ * Default template: views-view-simple-timeline.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
- *   - fields: An array of field objects. Each field object contains:
- *     - separator: A string that separates the fields.
- *     - wrapper_suffix: A string added to the beginning of the fields.
- *     - label_html: An HTML string that labels the fields.
- *     - content: The fields.
- *     - wrapper_suffix: A string added to the end of the fields.
- *
- * @see template_preprocess_views_view_fields()
+ *   - view: A View object.
  */
-function theme_simple_timeline_fields($variables) {
-  $fields = $variables['fields'];
-  $output = '';
+function template_preprocess_views_view_simple_timeline(&$variables) {
+  $view = $variables['view'];
+  $rows = $variables['rows'];
+  $style = $view->style_plugin;
+  $options = $style->options;
 
-  foreach ($fields as $field) {
-    if (!empty($field->separator)) {
-      $output .= $field->separator;
-    }
+  // Add our specific class.
+  $variables['list']['attributes'] = new Attribute(['class' => 'timeline-list']);
 
-    $output .= $field->content;
+  // Fetch classes from options.
+  if ($options['class']) {
+    $class = explode(' ', $options['class']);
+    $class = array_map('\Drupal\Component\Utility\Html::cleanCssIdentifier', $class);
+    $variables['list']['attributes']->addClass($class);
   }
 
-  return $output;
-}
+  if ($options['position_items']) {
+    $variables['list']['attributes']->addClass($options['position_items']);
+  }
 
+  if ($options['position_marker']) {
+    $variables['list']['attributes']->addClass($options['position_marker']);
+  }
+
+  // Fetch wrapper classes from handler options.
+  if ($options['wrapper_class']) {
+    $wrapper_class = explode(' ', $options['wrapper_class']);
+    $variables['attributes']['class'] = array_map('\Drupal\Component\Utility\Html::cleanCssIdentifier', $wrapper_class);
+  }
+
+  $count = 0;
+  $variables['default_row_class'] = !empty($options['default_row_class']);
+  foreach ($rows as $id => $row) {
+    $count++;
+    $variables['rows'][$id] = [];
+    $variables['rows'][$id]['content'] = $row;
+    $variables['rows'][$id]['attributes'] = new Attribute(['class' => 'timeline-item clearfix']);
+    // Add odd/even class.
+    $odd = $count % 2 ? 'odd' : 'even';
+    $variables['rows'][$id]['attributes']->addClass($odd);
+
+    if ($row_class = $view->style_plugin->getRowClass($id)) {
+      $variables['rows'][$id]['attributes']->addClass($row_class);
+    }
+  }
+
+}
