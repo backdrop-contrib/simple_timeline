@@ -1,6 +1,6 @@
-name: Simple timeline
+name: Simple Timeline
 type: module
-description: Provide a views style for displaying content in a vertical timeline
+description: Provide a views style for displaying content in a vertical timeline.
 core: 8.x
 dependencies:
-  - views
+  - drupal:views
