@@ -10,7 +10,7 @@
  * @var $simple_timeline_text
  */
 ?>
-<div class="<?php echo $classes; ?>">
+<div class="<?php print implode(' ', $classes); ?>">
   <span class="timeline-image"><?php echo $simple_timeline_image; ?></span>
 
     <span class="timeline-content">

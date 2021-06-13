@@ -23,6 +23,8 @@ function simple_timeline_views_plugins() {
         'uses fields' => TRUE,
         'uses grouping' => FALSE,
         'type' => 'normal',
+        // 'theme file' => backdrop_get_path('module', 'simple_timeline'),
+        // 'theme path' => backdrop_get_path('module', 'simple_timeline'),
       ),
     ),
     'row' => array(
@@ -34,6 +36,8 @@ function simple_timeline_views_plugins() {
         'theme' => 'simple_timeline_fields',
         'uses fields' => TRUE,
         'type' => 'normal',
+        'theme path' => backdrop_get_path('module', 'simple_timeline'),
+
       ),
     ),
   );

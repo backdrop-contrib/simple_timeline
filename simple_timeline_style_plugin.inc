@@ -36,7 +36,7 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
    *   The rendered html.
    */
   public function render() {
-    drupal_add_css(drupal_get_path('module', 'simple_timeline') . '/simple_timeline.css', 'file');
+    backdrop_add_css(backdrop_get_path('module', 'simple_timeline') . '/simple_timeline.css', 'file');
 
     // Set needed values for basic timeline proper functioning.
     $this->options['wrapper_class'] .= ' simple-timeline';
@@ -55,9 +55,9 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
 
     $row_plugin = get_class($this->row_plugin);
     if (!in_array($row_plugin, array(
-        'views_plugin_row_node_view',
-        'panels_views_plugin_row_fields',
-        'simple_timeline_row_plugin',
+      'views_plugin_row_node_view',
+      'panels_views_plugin_row_fields',
+      'simple_timeline_row_plugin',
     ))
     ) {
       $errors[] = t('You have not selected an appropriate row plugin. your timeline will break');

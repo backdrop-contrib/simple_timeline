@@ -10,7 +10,11 @@
  * Implements hook_views_api().
  */
 function simple_timeline_views_api() {
-  return array('api' => '3.0');
+  return array(
+    'api' => '3.0',
+    'path' => backdrop_get_path('module', 'simple_timeline'),
+    'template_path' => backdrop_get_path('module', 'simple_timeline')
+  );
 }
 
 /**
@@ -20,7 +24,7 @@ function simple_timeline_theme() {
   return array(
     'simple_timeline_fields' => array(
       'arguments' => array('plugin' => NULL, 'input' => NULL),
-      'path' => drupal_get_path('module', 'simple_timeline'),
+      'path' => backdrop_get_path('module', 'simple_timeline'),
       'template' => 'simple-timeline-fields',
     ),
   );
@@ -56,4 +60,14 @@ function template_preprocess_simple_timeline_fields(&$vars) {
   }
   $vars['simple_timeline_date'] = implode($options['simple_timeline_date_separator'], $vars['simple_timeline_date']);
   $vars['simple_timeline_text'] = implode($options['simple_timeline_text_separator'], $vars['simple_timeline_text']);
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function simple_timeline_autoload_info() {
+  return array(
+    'simple_timeline_row_plugin' => 'simple_timeline_row_plugin.inc',
+    'simple_timeline_style_plugin' => 'simple_timeline_style_plugin.inc',
+  );
 }

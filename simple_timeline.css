@@ -13,6 +13,7 @@
   position: relative;
   width: 50%;
   clear: both;
+  margin: 0;
 }
 
 .simple-timeline ul li .timeline-text {
@@ -23,11 +24,11 @@
   margin-left: 2%;
 }
 
-.simple-timeline ul li.views-row-even {
+.simple-timeline ul li.even {
   float: right;
 }
 
-.simple-timeline ul li.views-row-even > div {
+.simple-timeline ul li.even > div {
   display: block;
   float: left;
   background: url('./img/li-bg.png') left center no-repeat;
@@ -40,16 +41,16 @@
   margin: 0 0 1% 0;
 }
 
-.simple-timeline ul li.views-row-even > div .timeline-date {
+.simple-timeline ul li.even > div .timeline-date {
   text-align: left;
 }
 
-.simple-timeline ul li.views-row-odd {
+.simple-timeline ul li.odd {
   float: left;
   text-align: right;
 }
 
-.simple-timeline ul li.views-row-odd > div {
+.simple-timeline ul li.odd > div {
   display: block;
   float: right;
   background: url('./img/li-bg.png') right center no-repeat;
@@ -57,7 +58,7 @@
   padding-right: 30px;
 }
 
-.simple-timeline ul li.views-row-odd > div .timeline-text {
+.simple-timeline ul li.odd > div .timeline-text {
   float: right;
   text-align: right;
   margin-right: 2%;
@@ -69,11 +70,11 @@
   overflow-x: hidden;
 }
 
-.simple-timeline ul li.views-row-odd > div .timeline-image {
+.simple-timeline ul li.odd > div .timeline-image {
   float: right;
 }
 
-.simple-timeline ul li.views-row-even > div .timeline-image {
+.simple-timeline ul li.even > div .timeline-image {
   float: left;
 }
 
@@ -81,12 +82,12 @@
   min-width: 125px;
 }
 
-.simple-timeline ul li.views-row-odd > div .timeline-content {
+.simple-timeline ul li.odd > div .timeline-content {
   float: left;
   padding-right: 2px;
 }
 
-.simple-timeline ul li.views-row-even > div .timeline-content {
+.simple-timeline ul li.even > div .timeline-content {
   float: right;
   padding-left: 2px;
 }
