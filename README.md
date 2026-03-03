@@ -8,7 +8,7 @@ History
 
 Simple Timeline was originally written for Drupal 7 by [Alan Lobo](https://github.com/alansaviolobo) and later ported to Backdrop CMS by [Robert Garrigos](https://github.com/robertgarrigos). That original release (1.x-1.x) provided a single Views style plugin — "Simple Timeline" — along with a custom row plugin called "Simple Timeline Item" that allowed users to map fields to date, text, and image slots on the timeline.
 
-In 2025, [Tim Erickson](https://github.com/stpaultim) began work on a new timeline module built from the ground up. That work produced a more capable timeline implementation featuring proportional time-based spacing, collision avoidance, alternating layouts, mobile responsiveness, and a modern visual design. Rather than releasing it as a separate module, the decision was made to merge it into Simple Timeline as a second Views style plugin called "Enhanced Timeline," releasing the combined work as the 1.x-2.x series.
+[Tim Erickson](https://github.com/stpaultim) began work on a new timeline module built from the ground up. That work produced a more capable timeline implementation featuring proportional time-based spacing, collision avoidance, alternating layouts, mobile responsiveness, and a modern visual design. Rather than releasing it as a separate module, the decision was made to merge it into Simple Timeline as a second Views style plugin called "Enhanced Timeline," releasing the combined work as the 1.x-2.x series.
 
 The 1.x-2.x release is fully backward compatible. Existing users of the original Simple Timeline plugin can upgrade without any changes to their views or configuration. The Enhanced Timeline plugin is opt-in — users who want the new features can switch to it at their own pace.
 
