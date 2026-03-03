@@ -60,7 +60,7 @@ class simple_timeline_style_plugin extends views_plugin_style_list {
       'simple_timeline_row_plugin',
     ))
     ) {
-      $errors[] = t('You have not selected an appropriate row plugin. your timeline will break');
+      $errors[] = t('Simple Timeline requires the Show format to be set to "Content" or "Simple Timeline Item". Go to Format &rsaquo; Show and select one of these options.');
     }
     return $errors;
   }

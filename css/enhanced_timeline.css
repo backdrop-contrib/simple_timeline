@@ -1,0 +1,213 @@
+/**
+ * @file
+ * Styles for the Enhanced Timeline Views style plugin.
+ */
+
+/* Container */
+.enhanced-timeline-container {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  padding: 40px 0;
+  box-sizing: border-box;
+}
+
+/* Center vertical line */
+.enhanced-timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #ccc;
+  transform: translateX(-50%);
+}
+
+/* Individual event wrapper */
+.enhanced-timeline-event {
+  position: absolute;
+  width: 45%;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+/* Raised to the front when tapped/clicked */
+.enhanced-timeline-event--active {
+  z-index: 10;
+}
+
+/* Right-side events — left edge sits exactly on the center line */
+.enhanced-timeline-event-right {
+  left: 50%;
+  padding-left: 22px;
+}
+
+/* Left-side events — right edge sits exactly on the center line */
+.enhanced-timeline-event-left {
+  right: 50%;
+  text-align: right;
+  padding-right: 22px;
+}
+
+/* Dot on the center line */
+.enhanced-timeline-dot {
+  position: absolute;
+  top: 20px;
+  width: 14px;
+  height: 14px;
+  background-color: #0071b3;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #0071b3;
+  z-index: 4;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/*
+ * Anchor the dot to the boundary of the event element, which sits on the
+ * center line. translateX(-50%) / translateX(50%) recentres the dot so its
+ * visual centre is exactly on the 2px line.
+ */
+.enhanced-timeline-event-right .enhanced-timeline-dot {
+  left: 0;
+  transform: translateX(-50%);
+}
+
+.enhanced-timeline-event-left .enhanced-timeline-dot {
+  right: 0;
+  transform: translateX(50%);
+}
+
+/* Vertical stem — bridges any gap between dot and card connector.
+   Hidden by default; shown by JS when needed. z-index 3 sits above the
+   center line. */
+.enhanced-timeline-stem {
+  position: absolute;
+  width: 2px;
+  background-color: #0071b3;
+  display: none;
+  z-index: 3;
+  transition: background-color 0.2s ease;
+}
+
+.enhanced-timeline-event-right .enhanced-timeline-stem {
+  left: 0;
+  transform: translateX(-50%);
+}
+
+.enhanced-timeline-event-left .enhanced-timeline-stem {
+  right: 0;
+  transform: translateX(50%);
+}
+
+/* Hover — amber highlight traces the full path: card → connector → stem → dot. */
+.enhanced-timeline-event:hover {
+  z-index: 5;
+}
+
+.enhanced-timeline-event:hover .enhanced-timeline-card {
+  border-color: #e07000;
+  box-shadow: 0 4px 16px rgba(224, 112, 0, 0.2);
+}
+
+.enhanced-timeline-event:hover .enhanced-timeline-dot {
+  background-color: #e07000;
+  box-shadow: 0 0 0 2px #e07000;
+}
+
+.enhanced-timeline-event:hover .enhanced-timeline-stem {
+  background-color: #e07000;
+}
+
+.enhanced-timeline-event:hover::before {
+  background-color: #e07000;
+}
+
+/* Card */
+.enhanced-timeline-card {
+  background: #fff;
+  border: 1px solid #dde;
+  border-radius: 4px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Remove default node teaser margins inside cards */
+.enhanced-timeline-card .node {
+  margin: 0;
+}
+
+/* Connector line — spans the padding gap between dot and card.
+   Blue at rest to match the dot and stem; turns amber on hover.
+   top: 26px + height: 2px centres it at 27px, matching dot centre
+   (top: 20px + 7px half-height). */
+.enhanced-timeline-event::before {
+  content: '';
+  position: absolute;
+  top: 26px;
+  height: 2px;
+  background-color: #0071b3;
+  width: 22px;
+  transition: background-color 0.2s ease;
+}
+
+.enhanced-timeline-event-right::before {
+  left: 0;
+}
+
+.enhanced-timeline-event-left::before {
+  right: 0;
+}
+
+/* Right-only layout: line near the left edge */
+.enhanced-timeline-layout-right .enhanced-timeline-line {
+  left: 2%;
+}
+
+.enhanced-timeline-layout-right .enhanced-timeline-event-right {
+  left: 2%;
+  width: 94%;
+}
+
+/* Left-only layout: line near the right edge */
+.enhanced-timeline-layout-left .enhanced-timeline-line {
+  left: 98%;
+}
+
+.enhanced-timeline-layout-left .enhanced-timeline-event-left {
+  right: 2%;
+  width: 94%;
+}
+
+/* Responsive: stack all events on the right below 640px */
+@media (max-width: 640px) {
+  .enhanced-timeline-line {
+    left: 20px;
+  }
+
+  .enhanced-timeline-event,
+  .enhanced-timeline-event-left,
+  .enhanced-timeline-event-right {
+    left: 20px;
+    right: auto;
+    width: calc(100% - 30px);
+    text-align: left;
+    padding-left: 22px;
+    padding-right: 0;
+  }
+
+  .enhanced-timeline-event-left .enhanced-timeline-dot,
+  .enhanced-timeline-event-right .enhanced-timeline-dot {
+    left: 0;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .enhanced-timeline-event-left::before,
+  .enhanced-timeline-event-right::before {
+    left: 0;
+    right: auto;
+    width: 22px;
+  }
+}
