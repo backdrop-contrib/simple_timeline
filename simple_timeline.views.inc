@@ -26,6 +26,15 @@ function simple_timeline_views_plugins() {
         // 'theme file' => backdrop_get_path('module', 'simple_timeline'),
         // 'theme path' => backdrop_get_path('module', 'simple_timeline'),
       ),
+      'enhanced_timeline' => array(
+        'title' => t('Enhanced Timeline'),
+        'help' => t('Displays items as a vertical, proportionally-spaced timeline with modern design. Works with any content type. Note: pagers are supported but not recommended with proportional spacing — each page recalculates its own time scale, which makes the proportional distances misleading. Use equal spacing if you need a pager.'),
+        'handler' => 'enhanced_timeline_style_plugin',
+        'uses options' => TRUE,
+        'uses row plugin' => TRUE,
+        'uses row class' => FALSE,
+        'type' => 'normal',
+      ),
     ),
     'row' => array(
       'simple_timeline_row' => array(

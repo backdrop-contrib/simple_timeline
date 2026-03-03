@@ -1,0 +1,9 @@
+<?php
+/**
+ * @file
+ * Simple Timeline Demo Content module.
+ *
+ * Installs a "Timeline Event" content type with a date field and creates
+ * sample Lord of the Rings-themed events for demonstration purposes.
+ * Uninstall this module to remove all sample content and the content type.
+ */

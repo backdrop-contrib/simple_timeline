@@ -22,10 +22,10 @@ class simple_timeline_row_plugin extends views_plugin_row {
   public function option_definition() {
     $options = parent::option_definition();
     $options['simple_timeline_date'] = array('default' => array());
-    $options['simple_timeline_date_separator'] = array('default' => array());
+    $options['simple_timeline_date_separator'] = array('default' => '');
     $options['simple_timeline_text'] = array('default' => array());
-    $options['simple_timeline_text_separator'] = array('default' => array());
-    $options['simple_timeline_image'] = array('default' => array());
+    $options['simple_timeline_text_separator'] = array('default' => '');
+    $options['simple_timeline_image'] = array('default' => '');
     return $options;
   }
 

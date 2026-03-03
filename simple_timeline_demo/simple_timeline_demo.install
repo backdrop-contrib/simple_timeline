@@ -1,0 +1,277 @@
+<?php
+/**
+ * @file
+ * Install and uninstall functions for the Simple Timeline Demo Content module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Creates the "Timeline Event" content type, attaches a date field, and
+ * generates 20 Lord of the Rings-themed sample events spanning 2001–2020.
+ */
+function simple_timeline_demo_install() {
+  // 1. Create the Timeline Event content type.
+  //    - node_submitted FALSE: hide "Submitted by X on DATE" on all displays.
+  //    - promote_enabled FALSE: keep events off the front page.
+  $type = (object) array(
+    'type' => 'timeline_event',
+    'name' => t('Timeline Event'),
+    'base' => 'node_content',
+    'description' => t('An event to be displayed on a timeline.'),
+    'custom' => 1,
+    'modified' => 1,
+    'locked' => 0,
+    'is_new' => TRUE,
+    'settings' => array(
+      'promote_enabled'  => FALSE,
+      'node_submitted'   => FALSE,
+    ),
+  );
+  node_type_save($type);
+  node_add_body_field($type);
+
+  // 2. Create the date field base if it does not already exist.
+  if (!field_info_field('field_timeline_date')) {
+    field_create_field(array(
+      'field_name' => 'field_timeline_date',
+      'type' => 'datetime',
+      'module' => 'date',
+      'cardinality' => 1,
+      'settings' => array(
+        'granularity' => array(
+          'year'   => 'year',
+          'month'  => 'month',
+          'day'    => 'day',
+          'hour'   => 0,
+          'minute' => 0,
+          'second' => 0,
+        ),
+        'tz_handling'   => 'none',
+        'timezone_db'   => '',
+        'todate'        => '',
+        'cache_enabled' => 0,
+      ),
+    ));
+
+    // Record that we created the field so uninstall knows to delete it.
+    state_set('simple_timeline_demo_created_field', TRUE);
+  }
+
+  // 3. Attach the field to the timeline_event bundle.
+  //    Display is configured for both the default and teaser view modes so
+  //    the date is visible wherever the content type is rendered.
+  $date_display = array(
+    'label'    => 'above',
+    'type'     => 'date_default',
+    'settings' => array(
+      'format_type' => 'medium',
+      'fromto'      => 'both',
+    ),
+  );
+  field_create_instance(array(
+    'field_name'  => 'field_timeline_date',
+    'entity_type' => 'node',
+    'bundle'      => 'timeline_event',
+    'label'       => t('Date'),
+    'required'    => TRUE,
+    'widget' => array(
+      'type'   => 'date_select',
+      'weight' => 1,
+      'settings' => array(
+        'input_format'        => 'm/d/Y',
+        'input_format_custom' => '',
+        'increment'           => 1,
+        'text_parts'          => array(),
+        'year_range'          => '1900:+10',
+        'label_position'      => 'none',
+        'no_fieldset'         => TRUE,
+      ),
+    ),
+    'settings' => array(
+      'default_value' => 'now',
+      'todate'        => '',
+    ),
+    'display' => array(
+      'default' => $date_display,
+      'teaser'  => $date_display,
+    ),
+  ));
+
+  // 4. Create 20 sample Lord of the Rings-themed events spanning 2001–2020.
+  $events = array(
+    array(
+      'title' => 'Bilbo\'s Farewell Party at Bag End',
+      'date'  => '2001-09-22',
+      'body'  => 'Bilbo Baggins celebrates his eleventy-first birthday with a grand party, then vanishes using the One Ring, leaving it and all his worldly goods to his young cousin Frodo.',
+    ),
+    array(
+      'title' => 'Frodo Sets Out from the Shire',
+      'date'  => '2002-09-23',
+      'body'  => 'Frodo Baggins, accompanied by Sam, Merry, and Pippin, leaves Bag End and begins the long journey that will take him far beyond the borders of the Shire.',
+    ),
+    array(
+      'title' => 'The Council of Elrond at Rivendell',
+      'date'  => '2003-10-25',
+      'body'  => 'Representatives of the Free Peoples gather in Rivendell. Frodo volunteers to carry the One Ring to Mordor, and the Fellowship of the Ring is formed to accompany him.',
+    ),
+    array(
+      'title' => 'The Fellowship Enters the Mines of Moria',
+      'date'  => '2004-01-13',
+      'body'  => 'Unable to cross the Misty Mountains, the Fellowship descends into the ancient dwarf-realm of Khazad-dûm. Deep in its halls they encounter a Balrog — a demon of the ancient world.',
+    ),
+    array(
+      'title' => 'Gandalf Falls on the Bridge of Khazad-dûm',
+      'date'  => '2004-01-15',
+      'body'  => 'Gandalf the Grey confronts the Balrog on the Bridge of Khazad-dûm, crying "You shall not pass!" Both fall into the abyss. The leaderless Fellowship flees to Lothlórien.',
+    ),
+    array(
+      'title' => 'The Breaking of the Fellowship at Amon Hen',
+      'date'  => '2005-02-26',
+      'body'  => 'Boromir, corrupted by the lure of the Ring, attempts to take it from Frodo. He falls defending Merry and Pippin from Uruk-hai. Frodo and Sam strike out alone for Mordor.',
+    ),
+    array(
+      'title' => 'Frodo and Sam Traverse the Dead Marshes',
+      'date'  => '2006-03-01',
+      'body'  => 'Guided by the treacherous Gollum, Frodo and Sam pick their way through the haunted Dead Marshes, where the faces of the ancient dead shimmer beneath the stagnant pools.',
+    ),
+    array(
+      'title' => 'The Ents March on Isengard',
+      'date'  => '2007-03-02',
+      'body'  => 'Treebeard, oldest of the Ents, leads the Fangorn forest to war against Saruman\'s fortress of Isengard. The Ents tear down the walls and flood the pits, ending Saruman\'s power.',
+    ),
+    array(
+      'title' => 'The Battle of Helm\'s Deep',
+      'date'  => '2008-03-03',
+      'body'  => 'Ten thousand Uruk-hai storm the ancient fortress of the Hornburg. King Théoden and his people hold through the night until Gandalf the White arrives at dawn with the Riders of Rohan.',
+    ),
+    array(
+      'title' => 'Gandalf Confronts Saruman at Orthanc',
+      'date'  => '2009-03-05',
+      'body'  => 'Gandalf, Théoden, and Aragorn ride to Isengard and find Merry and Pippin feasting in the ruins. Gandalf breaks Saruman\'s staff and casts him from the order of wizards.',
+    ),
+    array(
+      'title' => 'The Lighting of the Beacons of Gondor',
+      'date'  => '2010-03-07',
+      'body'  => 'Pippin climbs to the topmost beacon on Minas Tirith and sets it alight. The signal fire leaps from peak to peak across the White Mountains until it reaches Rohan, calling the Rohirrim to war.',
+    ),
+    array(
+      'title' => 'The Siege of Minas Tirith Begins',
+      'date'  => '2011-03-09',
+      'body'  => 'The armies of Mordor under the command of the Witch-king of Angmar encircle Minas Tirith. The great ram Grond batters the gates as catapult stones and burning missiles rain down on the city.',
+    ),
+    array(
+      'title' => 'The Battle of the Pelennor Fields',
+      'date'  => '2012-03-15',
+      'body'  => 'The Rohirrim charge at dawn into the army besieging Minas Tirith. Éowyn of Rohan slays the Lord of the Nazgûl. Aragorn arrives by sea with the Dead Men of Dunharrow, and Gondor is saved.',
+    ),
+    array(
+      'title' => 'The Last Debate: The Host of the West Marches',
+      'date'  => '2013-03-18',
+      'body'  => 'Aragorn and the captains of the West resolve to march on the Black Gate as a feint, drawing Sauron\'s eye away from Frodo and Sam, who are struggling through the land of shadow toward Mount Doom.',
+    ),
+    array(
+      'title' => 'The Destruction of the One Ring',
+      'date'  => '2014-03-25',
+      'body'  => 'At the Cracks of Doom in Mount Doom, Gollum seizes the Ring from Frodo and falls into the fire. The One Ring is unmade, Sauron\'s power is broken forever, and his dark tower crumbles to ruin.',
+    ),
+    array(
+      'title' => 'The Coronation of King Elessar Telcontar',
+      'date'  => '2015-05-01',
+      'body'  => 'Aragorn son of Arathorn is crowned King of Gondor and Arnor in Minas Tirith by Gandalf the White. He takes the name Elessar Telcontar and is reunited with Arwen Undómiel of Rivendell.',
+    ),
+    array(
+      'title' => 'The Wedding of Aragorn and Arwen',
+      'date'  => '2016-05-19',
+      'body'  => 'Aragorn and Arwen Undómiel are wed in Minas Tirith in a ceremony of great beauty. Arwen, daughter of Elrond, has chosen a mortal life to be with the man she loves.',
+    ),
+    array(
+      'title' => 'The Scouring of the Shire',
+      'date'  => '2017-11-03',
+      'body'  => 'Frodo, Sam, Merry, and Pippin return home to find the Shire occupied by Saruman\'s ruffians. The hobbits rouse their people and drive out the invaders. Saruman is slain by Grima Wormtongue.',
+    ),
+    array(
+      'title' => 'Sam Plants the Golden Mallorn Tree',
+      'date'  => '2018-03-25',
+      'body'  => 'Using a gift of soil and a seed from Galadriel, Sam plants a golden mallorn tree in the Party Field where the old Party Tree once stood. It is the only mallorn tree east of the Sea.',
+    ),
+    array(
+      'title' => 'The Departure from the Grey Havens',
+      'date'  => '2020-09-29',
+      'body'  => 'Frodo Baggins, bearing wounds that will never fully heal, joins Bilbo, Gandalf, Galadriel, and Elrond at the Grey Havens. They sail West into the Uttermost Sea, leaving Middle-earth behind.',
+    ),
+  );
+
+  $nids = array();
+
+  foreach ($events as $event) {
+    $node = new Node();
+    $node->type     = 'timeline_event';
+    $node->title    = $event['title'];
+    $node->uid      = 1;
+    $node->status   = 1;
+    $node->promote  = 0;
+    $node->language = LANGUAGE_NONE;
+
+    $node->body[LANGUAGE_NONE][0] = array(
+      'value'  => $event['body'],
+      'format' => 'filtered_html',
+    );
+
+    // The date field expects 'YYYY-MM-DD HH:MM:SS' format.
+    $node->field_timeline_date[LANGUAGE_NONE][0] = array(
+      'value'       => $event['date'] . ' 00:00:00',
+      'timezone'    => 'UTC',
+      'timezone_db' => 'UTC',
+      'date_type'   => 'datetime',
+    );
+
+    node_save($node);
+    $nids[] = $node->nid;
+  }
+
+  // Store created node IDs so uninstall can remove them.
+  state_set('simple_timeline_demo_nids', $nids);
+
+  // 5. Install the default view.
+  config_install_default_config('simple_timeline_demo', 'views.view.simple_timeline_demo');
+
+  backdrop_set_message(t('Simple Timeline Demo: @count sample Timeline Event nodes created. <a href="@url">View the timeline</a>.', array(
+    '@count' => count($nids),
+    '@url'   => url('simple-timeline-demo'),
+  )));
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Removes all sample nodes, the field instance, the field base (if we created
+ * it), and the Timeline Event content type.
+ */
+function simple_timeline_demo_uninstall() {
+  // Delete sample nodes.
+  $nids = state_get('simple_timeline_demo_nids', array());
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+  }
+  state_del('simple_timeline_demo_nids');
+
+  // Remove the field instance from the timeline_event bundle.
+  $instance = field_info_instance('node', 'field_timeline_date', 'timeline_event');
+  if ($instance) {
+    field_delete_instance($instance);
+  }
+
+  // Delete the field base only if this module created it.
+  if (state_get('simple_timeline_demo_created_field', FALSE)) {
+    field_delete_field('field_timeline_date');
+    field_purge_batch(100);
+    state_del('simple_timeline_demo_created_field');
+  }
+
+  // Delete the content type.
+  node_type_delete('timeline_event');
+
+  // Remove the demo view.
+  config('views.view.simple_timeline_demo')->delete();
+}

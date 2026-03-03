@@ -1,0 +1,109 @@
+{
+    "_config_name": "views.view.simple_timeline_demo",
+    "name": "simple_timeline_demo",
+    "description": "A demonstration timeline of Lord of the Rings-themed events.",
+    "module": "simple_timeline_demo",
+    "tag": "",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "Timeline Demo",
+    "core": 0,
+    "display": {
+        "default": {
+            "display_title": "Default",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "title": "Timeline Demo",
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": 0
+                    }
+                },
+                "style_plugin": "enhanced_timeline",
+                "style_options": {
+                    "date_source": "field",
+                    "date_field": "field_timeline_date",
+                    "layout": "alternating",
+                    "spacing": "proportional",
+                    "min_height": 600,
+                    "height_per_year": 200
+                },
+                "row_plugin": "node",
+                "row_options": {
+                    "view_mode": "teaser",
+                    "links": true
+                },
+                "fields": {
+                    "field_timeline_date": {
+                        "id": "field_timeline_date",
+                        "table": "field_data_field_timeline_date",
+                        "field": "field_timeline_date",
+                        "label": "",
+                        "exclude": true,
+                        "type": "date_default",
+                        "settings": {
+                            "format_type": "medium",
+                            "fromto": "both"
+                        }
+                    }
+                },
+                "sorts": {
+                    "field_timeline_date_value": {
+                        "id": "field_timeline_date_value",
+                        "table": "field_data_field_timeline_date",
+                        "field": "field_timeline_date_value",
+                        "order": "ASC"
+                    }
+                },
+                "filters": {
+                    "status": {
+                        "id": "status",
+                        "table": "node",
+                        "field": "status",
+                        "value": "1",
+                        "group": 1,
+                        "expose": {
+                            "operator": false
+                        }
+                    },
+                    "type": {
+                        "id": "type",
+                        "table": "node",
+                        "field": "type",
+                        "value": {
+                            "timeline_event": "timeline_event"
+                        }
+                    }
+                }
+            }
+        },
+        "page_1": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "path": "simple-timeline-demo",
+                "menu": {
+                    "type": "normal",
+                    "title": "Timeline Demo",
+                    "description": "View the Simple Timeline demonstration.",
+                    "weight": 0,
+                    "name": "main-menu"
+                }
+            }
+        }
+    }
+}

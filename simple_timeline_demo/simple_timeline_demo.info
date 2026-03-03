@@ -1,0 +1,6 @@
+type = module
+name = Simple Timeline Demo Content
+description = Creates a "Timeline Event" content type and 20 sample Lord of the Rings-themed events for testing and demonstrating the Enhanced Timeline plugin. Uninstall to remove the sample content and content type.
+package = Views
+backdrop = 1.x
+dependencies[] = simple_timeline

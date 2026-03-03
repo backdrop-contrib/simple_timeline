@@ -27,6 +27,11 @@ function simple_timeline_theme() {
       'path' => backdrop_get_path('module', 'simple_timeline'),
       'template' => 'simple-timeline-fields',
     ),
+    'views_view_enhanced_timeline' => array(
+      'variables' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'timestamps' => NULL),
+      'template' => 'views-view-enhanced-timeline',
+      'path' => backdrop_get_path('module', 'simple_timeline') . '/templates',
+    ),
   );
 }
 
@@ -67,7 +72,8 @@ function template_preprocess_simple_timeline_fields(&$vars) {
  */
 function simple_timeline_autoload_info() {
   return array(
-    'simple_timeline_row_plugin' => 'simple_timeline_row_plugin.inc',
-    'simple_timeline_style_plugin' => 'simple_timeline_style_plugin.inc',
+    'simple_timeline_row_plugin'    => 'simple_timeline_row_plugin.inc',
+    'simple_timeline_style_plugin'  => 'simple_timeline_style_plugin.inc',
+    'enhanced_timeline_style_plugin' => 'enhanced_timeline_style_plugin.inc',
   );
 }
